@@ -18,12 +18,35 @@ void processImg(dt::BucketDetector &bdt, cv::Mat &img) {
 #endif
 }
 
-void processKey(dt::BucketDetector &bdt) {
+void processKey(dt::BucketDetector &bdt, cam::RsCam &cam) {
     int key = cv::waitKey(1);
     switch (key)
     {
     case 27:
-        exit(0);
+        cam.close();
+        break;
+    case 'a':
+        bdt.visual_config.showRedAndBlueBin = !bdt.visual_config.showRedAndBlueBin;
+        break;
+    case 'r':
+        bdt.visual_config.showRedBin = !bdt.visual_config.showRedBin;
+        break;
+    case 'b':
+        bdt.visual_config.showBlueBin = !bdt.visual_config.showBlueBin;
+        break;
+    case 'd':
+        cam.config.align_to_depth = !cam.config.align_to_depth;
+    default:
+        break;
+    }
+}
+
+void processKey(dt::BucketDetector &bdt, cam::Camera &cam) {
+    int key = cv::waitKey(1);
+    switch (key)
+    {
+    case 27:
+        cam.close();
         break;
     case 'a':
         bdt.visual_config.showRedAndBlueBin = !bdt.visual_config.showRedAndBlueBin;
@@ -49,7 +72,7 @@ int main(int argc, char **argv)
     bdt.visual_config.visible = false;
 #endif
 #ifdef REALSENSE
-    cam::RsCam cam(1280, 720, 60);
+    cam::RsCam cam(1280, 720, args.fps);
     cam.open();
 #else
     cam::USBCam cam(args.camera);
@@ -59,7 +82,7 @@ int main(int argc, char **argv)
         cv::Mat color_img;
         color_img = cam.read();
         processImg(bdt, color_img);
-        processKey(bdt);
+        processKey(bdt, cam);
     }
     return 0;
 }

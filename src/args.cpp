@@ -13,7 +13,7 @@ namespace {
 
 Args::Args(int argc, char** argv)
     : camera(0),
-      fps(60),
+      fps(30),
       realsense(false),
       use_depth(false),
       mParser(),

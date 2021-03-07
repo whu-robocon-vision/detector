@@ -69,6 +69,7 @@ void Detector::extract_color(const cv::Mat &src, cv::Mat &dst, const Detector::C
 }
 
 void BucketDetector::analyseComponents() {
+    output_info.results.clear();    // not using pre knowledge
     analyseComponentsByColor(RED);
     analyseComponentsByColor(BLUE);
 }
@@ -103,8 +104,11 @@ void BucketDetector::visualize() {
     else if (visual_config.showRedAndBlueBin) { cv::bitwise_or(process_info.blueBin, process_info.redBin, output_info.visualized_img); }
     else {
         for (auto& res : output_info.results) {
-        res.drawBoundingBox(output_info.visualized_img);
-    }
+            res.drawBoundingBox(output_info.visualized_img);
+        }
+        std::stringstream ss;
+        ss << "total frames : " << input_info.frame_num;
+        cv::putText(output_info.visualized_img, ss.str(), cv::Point(10, 20), cv::FONT_HERSHEY_PLAIN, 1, cv::Scalar::all(0), 1);
     }
 }
 }

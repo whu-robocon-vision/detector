@@ -11,7 +11,7 @@ class Camera
 private:
 public:
     Camera() : frame_size(640, 480), status(STOP) {};
-    Camera(int w, int h) : frame_size(640, 480), status(STOP) {};
+    Camera(int w, int h) : frame_size(w, h), status(STOP) {};
     virtual ~Camera() {};
     virtual bool open() = 0;
     virtual bool isOpen() = 0;
@@ -53,10 +53,15 @@ private:
     rs2_intrinsics depth_intrinics;
     rs2::config cfg;
     rs2::pipeline pipe;
+    rs2::align align_to_depth;
+    rs2::align align_to_color;
     proj::Projection projector;
     int setting_fps;
 public:
-    RsCam() : setting_fps(60) {}
+    RsCam() 
+    : setting_fps(60),
+    align_to_depth(RS2_STREAM_DEPTH),
+    align_to_color(RS2_STREAM_COLOR) {}
     RsCam(int w, int h, int s_fps);
     ~RsCam() { close(); }
     bool open();
@@ -64,6 +69,11 @@ public:
     void close();
     cv::Mat read();
     void readTo(cv::Mat &color, cv::Mat &depth);
+
+    struct Config {
+        bool align_to_depth;
+        Config() : align_to_depth(true) {}
+    } config;
 };
 } // namespace cam
 

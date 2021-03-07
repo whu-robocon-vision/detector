@@ -27,7 +27,11 @@ cv::Mat USBCam::read() {
     return frame;
 }
 
-RsCam::RsCam(int w, int h, int s_fps) : Camera(w, h), setting_fps(s_fps) {
+RsCam::RsCam(int w, int h, int s_fps)
+        : Camera(w, h),
+        align_to_depth(RS2_STREAM_DEPTH),
+        align_to_color(RS2_STREAM_COLOR),
+        setting_fps(s_fps) {
     
 }
 
@@ -39,6 +43,10 @@ bool RsCam::open() try {
     rs2::pipeline_profile profile = pipe.start(cfg);
     color_intrinics = profile.get_stream(RS2_STREAM_COLOR).as<rs2::video_stream_profile>().get_intrinsics();
     depth_intrinics = profile.get_stream(RS2_STREAM_DEPTH).as<rs2::video_stream_profile>().get_intrinsics();
+    if (config.align_to_depth)
+        projector.setIntrin(depth_intrinics);
+    else
+        projector.setIntrin(color_intrinics);
     status = WORK;
     return true;
 } catch (rs2::error &e) {
@@ -58,12 +66,20 @@ void RsCam::close() {
 
 cv::Mat RsCam::read() {
     rs2::frameset fset = pipe.wait_for_frames();
+    if (config.align_to_depth)
+        fset = align_to_depth.process(fset);
+    else
+        fset = align_to_color.process(fset);
     rs2::frame color_frame = fset.get_color_frame();
     return cv::Mat(frame_size, CV_8UC3, (void*)color_frame.get_data(), cv::Mat::AUTO_STEP);
 }
 
 void RsCam::readTo(cv::Mat &color, cv::Mat &depth) {
     rs2::frameset fset = pipe.wait_for_frames();
+    if (config.align_to_depth)
+        fset = align_to_depth.process(fset);
+    else
+        fset = align_to_color.process(fset);
     rs2::frame color_frame = fset.get_color_frame();
     color = cv::Mat(frame_size, CV_8UC3, (void*)color_frame.get_data(), cv::Mat::AUTO_STEP);
     rs2::frame depth_frame = fset.get_depth_frame();
