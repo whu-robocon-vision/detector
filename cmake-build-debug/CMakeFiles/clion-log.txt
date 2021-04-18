@@ -1,0 +1,6 @@
+/home/way/CLion/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/way/learn/vision/detector
+-- Found OpenCV: /usr/local (found suitable version "4.5.1", minimum required is "4.5.0") 
+genrating on linux
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/way/learn/vision/detector/cmake-build-debug

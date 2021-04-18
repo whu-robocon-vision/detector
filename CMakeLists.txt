@@ -1,8 +1,8 @@
-cmake_minimum_required(VERSION 3.18.0)
+cmake_minimum_required(VERSION 3.0.0)
 project(detectBucket)
 
 add_definitions("-D_DEBUG")
-find_package(OpenCV 3.0.0 REQUIRED)
+find_package(OpenCV 4.5.0 REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 link_directories(${OpenCV_LIBRARY_DIRS})
 if(WIN32)

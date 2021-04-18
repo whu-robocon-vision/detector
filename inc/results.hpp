@@ -4,7 +4,7 @@
 namespace results {
 struct Result {
     cv::RotatedRect boundingBox;
-    int id;
+    int id{};
 
     void drawBoundingBox(cv::Mat &src);
     cv::Point2f centroid();

@@ -1,8 +1,8 @@
 #include "main.hpp"
 #include "args.hpp"
 #include "camera.hpp"
-#define REALSENSE
-#define VISUAL
+#define REALSENSE   1u
+#define VISUAL      1u
 // #define USE_DEPTH
 
 void processImg(dt::BucketDetector &bdt, cv::Mat &img) {
@@ -13,7 +13,7 @@ void processImg(dt::BucketDetector &bdt, cv::Mat &img) {
     float fps = 1.0f / (frame_start_clock - frame_end_clock) * CLOCKS_PER_SEC;
     printf("fps : %.2f\n", fps);
     bdt.detect(img);
-#ifdef VISUAL
+#if (VISUAL == 1u)
     cv::imshow("visualized img", bdt.output_info.visualized_img);
 #endif
 }
@@ -66,12 +66,12 @@ int main(int argc, char **argv)
 {
     Args args(argc, argv);
     dt::BucketDetector bdt;
-#ifdef VISUAL
+#if (VISUAL == 1u)
     bdt.visual_config.visible = true;
 #else
     bdt.visual_config.visible = false;
 #endif
-#ifdef REALSENSE
+#if (REALSENSE == 1u)
     cam::RsCam cam(1280, 720, args.fps);
     cam.open();
 #else

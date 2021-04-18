@@ -8,7 +8,6 @@ void BucketDetector::detect(const cv::Mat &src)
     findComponents();
     analyseComponents();
     visualize();
-    return;
 }
 
 void BucketDetector::processImg() {
@@ -31,8 +30,8 @@ void BucketDetector::findByColorMask(const cv::Mat &mask, const COLOR &color) {
     using Hierachy = std::vector<cv::Vec4i>;
 
     Contours contours;
-    Hierachy hierachy;
-    cv::findContours(mask, contours, hierachy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
+    Hierachy hierarchy;
+    cv::findContours(mask, contours, hierarchy, cv::RETR_EXTERNAL, cv::CHAIN_APPROX_SIMPLE);
     if (color == RED) {
         process_info.red_contours.swap(contours);
     } else if (color == BLUE) {
@@ -40,7 +39,7 @@ void BucketDetector::findByColorMask(const cv::Mat &mask, const COLOR &color) {
     }
 }
 
-void Detector::extract_color(const cv::Mat &src, cv::Mat &dst, const Detector::COLOR color) const
+void Detector::extract_color(const cv::Mat &src, cv::Mat &dst, const Detector::COLOR color)
 {
     cv::Mat hsv;
     cv::cvtColor(src, hsv, cv::COLOR_BGR2HSV);

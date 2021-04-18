@@ -14,17 +14,17 @@ public:
         BLUE,
         BLACK
     };
-    Detector() {}
-    virtual ~Detector() {};
-    void extract_color(const cv::Mat &src, cv::Mat &dst, const COLOR color) const;
+    Detector() = default;
+    virtual ~Detector() = default;;
+    static void extract_color(const cv::Mat &src, cv::Mat &dst, COLOR color) ;
 private:
 };
 
 class BucketDetector : public Detector {
 public:
     void detect(const cv::Mat &src);
-    BucketDetector() {};
-    ~BucketDetector() {};
+    BucketDetector() = default;;
+    ~BucketDetector() override = default;;
     struct OutputInfo {
         std::vector<results::BucketResult> results;
         cv::Mat visualized_img;

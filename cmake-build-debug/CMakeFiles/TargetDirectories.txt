@@ -1,0 +1,3 @@
+/home/way/learn/vision/detector/cmake-build-debug/CMakeFiles/rebuild_cache.dir
+/home/way/learn/vision/detector/cmake-build-debug/CMakeFiles/edit_cache.dir
+/home/way/learn/vision/detector/cmake-build-debug/CMakeFiles/detectBucket.dir

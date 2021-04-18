@@ -1,5 +1,7 @@
 #ifndef __PROJECTION_H
 #define __PROJECTION_H
+#include <utility>
+
 #include "include-opencv.hpp"
 #include "include-realsense.hpp"
 
@@ -11,7 +13,7 @@ private:
     /* data */
     cv::Mat _extrin_rmat;
     cv::Mat _extrin_tmat;
-    rs2_intrinsics _intrinsics;
+    rs2_intrinsics _intrinsics{};
 public:
     Projection()
         :_extrin_rmat(cv::Mat(cv::Matx33f(0.99931884f, -0.012486592f, 0.034726303f,
@@ -21,15 +23,15 @@ public:
                                          -399.74771f,
                                          -383.60397f)))
         {}
-    Projection(const cv::Mat rmat,const cv::Mat tmat,const rs2_intrinsics intrin) 
-        : _extrin_rmat(rmat),
-        _extrin_tmat(tmat),
+    Projection(cv::Mat  rmat, cv::Mat  tmat,const rs2_intrinsics intrin)
+        : _extrin_rmat(std::move(rmat)),
+        _extrin_tmat(std::move(tmat)),
         _intrinsics(intrin) {};
-    ~Projection() {};
+    ~Projection() = default;;
     void setIntrin(const rs2_intrinsics &intrin) { _intrinsics = intrin; }
     cv::Point3f pixel2world(const cv::Point2i &pixel,const cv::Mat &depth) const;
     cv::Point3f pixel2camera(const cv::Point2i &pixel,const cv::Mat &depth) const;
-    cv::Point3f camera2world(const cv::Point3f point) const;
+    cv::Point3f camera2world(const cv::Point3f& point) const;
 };
 
 } // namespace proj
